@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 register = template.Library()
 
+# 系统全部的过滤器
 
 @register.simple_tag
 def timeformat(data):

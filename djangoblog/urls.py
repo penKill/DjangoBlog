@@ -34,7 +34,7 @@ sitemaps = {
     'User': UserSiteMap,
     'static': StaticViewSitemap
 }
-
+# 定义了一堆错误页面
 handler404 = 'blog.views.page_not_found_view'
 handler500 = 'blog.views.server_error_view'
 handle403 = 'blog.views.permission_denied_view'

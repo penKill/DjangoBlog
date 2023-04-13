@@ -107,8 +107,11 @@ class LoginView(FormView):
 
         return super(LoginView, self).dispatch(request, *args, **kwargs)
 
+    # 处理前端给的参数或者添加额外的参数
     def get_context_data(self, **kwargs):
+        # 获取登录前的跳转连接
         redirect_to = self.request.GET.get(self.redirect_field_name)
+        # 如果没有登录的跳转连接 就返回到根目录
         if redirect_to is None:
             redirect_to = '/'
         kwargs['redirect_to'] = redirect_to
@@ -122,6 +125,7 @@ class LoginView(FormView):
             delete_sidebar_cache()
             logger.info(self.redirect_field_name)
 
+            # 把用户信息设置到request的上下文中
             auth.login(self.request, form.get_user())
             if self.request.POST.get("remember"):
                 self.request.session.set_expiry(self.login_ttl)

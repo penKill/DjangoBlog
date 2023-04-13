@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class LinkShowType(models.TextChoices):
+    # 用这个区分子类的分类 做逻辑区分
     I = ('i', '首页')
     L = ('l', '列表页')
     P = ('p', '文章页面')
@@ -108,7 +109,7 @@ class Article(BaseModel):
         return self.body
 
     def __str__(self):
-        return self.title
+        return str(self.id)
 
     class Meta:
         ordering = ['-article_order', '-pub_time']

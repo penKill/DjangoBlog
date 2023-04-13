@@ -21,6 +21,7 @@ from djangoblog.utils import cache, get_blog_setting, get_sha256
 logger = logging.getLogger(__name__)
 
 
+# 文章列表默认使用视图模板
 class ArticleListView(ListView):
     # template_name属性用于指定使用哪个模板进行渲染
     template_name = 'blog/article_index.html'
@@ -37,9 +38,11 @@ class ArticleListView(ListView):
     def get_view_cache_key(self):
         return self.request.get['pages']
 
+    # 获取当前的页码
     @property
     def page_number(self):
         page_kwarg = self.page_kwarg
+        # 从查询组件参数 或者get请求参数中 获取前端传递的page页面
         page = self.kwargs.get(
             page_kwarg) or self.request.GET.get(page_kwarg) or 1
         return page
@@ -83,6 +86,7 @@ class ArticleListView(ListView):
 
     def get_context_data(self, **kwargs):
         kwargs['linktype'] = self.link_type
+        logger.info('this is kwargs={}'.format(kwargs))
         return super(ArticleListView, self).get_context_data(**kwargs)
 
 
@@ -93,6 +97,8 @@ class IndexView(ArticleListView):
     # 友情链接类型
     link_type = LinkShowType.I
 
+
+    # 第一次查询的时候，去数据库中查询数据
     def get_queryset_data(self):
         article_list = Article.objects.filter(type='a', status='p')
         return article_list
@@ -107,8 +113,11 @@ class ArticleDetailView(DetailView):
     文章详情页面
     '''
     template_name = 'blog/article_detail.html'
+    # 设置当前对应得是那张表
     model = Article
+    # 设置当前查询的主键是啥
     pk_url_kwarg = 'article_id'
+    # 在返回的html模板文件中华设置的实体类key
     context_object_name = "article"
 
     def get_object(self, queryset=None):
